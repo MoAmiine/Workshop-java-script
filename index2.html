@@ -207,7 +207,7 @@
             const cmls = ['todo', 'in-progress', 'testing', 'done']
             cmls.forEach(colum => {
                 const container = document.getElementById(colum);
-                const stories = boardStories.filter(arr, arr.status === colum);
+                const stories = boardStories.filter(arr =>arr.status === colum);
 
                 if (stories.length === 0) {
                     container.innerHTML = "<div class='card'>pas de cart</div>"
