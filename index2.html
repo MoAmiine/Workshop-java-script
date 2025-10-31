@@ -90,7 +90,7 @@
         var utiliteurNom;
         function addCollaborator() {
             utiliteurNom = collaboratorNameInput.value.trim();
-            if (utiliteurNom === '' || collaborators.includes(utiliteurNom) || message ==="") {
+            if (utiliteurNom === '' || collaborators.includes(utiliteurNom)) {
                 collaboratorNameInput.style.borderColor = 'red';
                 let message  = document.createElement('span');
                 let parent = document.querySelector('.input-group');
@@ -167,8 +167,12 @@
          *   - Si aucune story: afficher "Aucune story dans ce sprint"
          * - Injecter tout le HTML généré dans le conteneur
          */
+        
         function renderSprintBacklog() {
-            // À IMPLÉMENTER
+            let sprintBacklog = document.getElementById('sprintBacklog');
+            
+            
+
         }
 
         /**
