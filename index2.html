@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./assets/css/main.css">
     <title>SCRUM Board</title>
 </head>
-
 <body>
     <div class="container">
         <div class="header">
@@ -94,14 +92,8 @@
             utiliteurNom = collaboratorNameInput.value.trim();
             if (utiliteurNom === '' || collaborators.includes(utiliteurNom)) {
                 collaboratorNameInput.style.borderColor = 'red';
-                let message = document.createElement('span');
-                let parent = document.querySelector('.input-group');
-                parent.appendChild(message);
-                message.style.color = 'red';
-                message.style.display = 'flex';
-                message.style.alignItems = 'center';
                 return;
-            } else {
+            }else {
                 collaborators.push(utiliteurNom);
             }
             collaboratorNameInput.value = '';
@@ -136,14 +128,18 @@
          * - Générer les options: une option "Non assigné" + une option par collaborateur
          * - Mettre à jour le select avec innerHTML
          */
-        function updateAssigneeSelect() {
-            let selectCollaborators = document.getElementById('storyAssignee');
-            let selectCollaborator = document.createElement('option');
-            selectCollaborators.appendChild(selectCollaborator);
-            collaborators.forEach(collaborator =>{
-                selectCollaborator.innerHTML = collaborator;
-            })
-        }
+        let selectCollaborators = document.getElementById('storyAssignee');
+function updateAssigneeSelect() {
+    let select = document.getElementById("storyAssignee");
+    select.innerHTML = '<option value="">Non assigné</option>'; // reset + default
+
+    collaborators.forEach(collaborator => {
+        let option = document.createElement("option");
+        option.value = collaborator;
+        option.textContent = collaborator;
+        select.appendChild(option);
+    });
+}
 
         /**
          * Fonction pour créer une nouvelle User Story
@@ -155,11 +151,40 @@
          * - Vider les champs titre et description
          * - Appeler renderSprintBacklog() pour actualiser l'affichage
          */
-        function addUserStory() {
-            let storyTitle = document.getElementById("storyTitle");
-            let storyDescription = document.getElementById("storyDescription");
-            storyTitle.innerHTML = "hi"
-        }
+
+function addUserStory() {
+    let storyTitles = document.getElementById("storyTitle");
+    let storyDescriptions = document.getElementById("storyDescription");
+    let sprints = document.getElementById("storySprint");
+    let assignedValue = selectCollaborators.value;
+    let assignedText = selectCollaborators.options[selectCollaborators.selectedIndex].text;
+    let sprintValue = sprints.value;
+    let sprintText = sprints.options[sprints.selectedIndex].text;
+
+    if (storyTitles.value === '' || storyDescriptions.value === '') {                
+        storyTitles.placeholder = "Please fill the inputs";
+        storyDescriptions.placeholder = "Please fill the inputs";
+        storyDescriptions.classList.add("inputcolor");
+        storyTitles.classList.add("inputcolor");
+        return;
+    }
+
+    let story = {
+        id: storyIdCounter++,
+        title: storyTitles.value,
+        description: storyDescriptions.value,
+        sprint: parseInt(sprintValue),
+        assignee: assignedValue || 'Non assigné',
+        status: 'backlog'
+    };
+
+
+    storyTitles.value = '';
+    storyDescriptions.value = '';
+    userStories.push(story);
+    console.log(userStories);
+    renderSprintBacklog();
+}
 
         /**
          * Fonction pour afficher le Sprint Backlog avec toutes les stories par sprint
@@ -172,9 +197,24 @@
          *   - Si aucune story: afficher "Aucune story dans ce sprint"
          * - Injecter tout le HTML généré dans le conteneur
          */
-        function renderSprintBacklog() {
-            // À IMPLÉMENTER
-        }
+function renderSprintBacklog() {
+    let container = document.getElementById("sprintBacklog");
+    container.innerHTML = "";
+
+    if(userStories.length === 0) {
+        container.innerHTML = "<p>Aucune story dans le backlog.</p>";
+        return;
+    }
+
+    userStories.forEach(story => {
+        let div = document.createElement("div");
+        div.style.border = "1px solid #ccc";
+        div.style.padding = "10px";
+        div.style.margin = "5px 0";
+        div.innerHTML = `<strong>${story.title}</strong> (Sprint ${story.sprint})<br>${story.description}<br><em>Assigné à: ${story.assignee}</em>`;
+        container.appendChild(div);
+    });
+}
 
         /**
          * Fonction appelée lors du clic sur "Démarrer Sprint"
@@ -241,8 +281,6 @@
          */
         function getNextStatus(current) {
             // À IMPLÉMENTER
-            const obj = { 'todo': 'in-progress', 'in-progres': 'testing', 'testing': 'done' }
-            return obj[current]
         }
 
         /**
@@ -253,8 +291,6 @@
          */
         function getPrevStatus(current) {
             // À IMPLÉMENTER
-            const obj = { 'in-progress': 'todo', 'testing': 'in-progres', 'done': 'testing' }
-            return obj[current]
         }
 
         /**
@@ -284,5 +320,4 @@
 
     </script>
 </body>
-
 </html>
