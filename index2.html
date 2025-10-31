@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./assets/css/main.css">
     <title>SCRUM Board</title>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -92,8 +94,14 @@
             utiliteurNom = collaboratorNameInput.value.trim();
             if (utiliteurNom === '' || collaborators.includes(utiliteurNom)) {
                 collaboratorNameInput.style.borderColor = 'red';
+                let message = document.createElement('span');
+                let parent = document.querySelector('.input-group');
+                parent.appendChild(message);
+                message.style.color = 'red';
+                message.style.display = 'flex';
+                message.style.alignItems = 'center';
                 return;
-            }else {
+            } else {
                 collaborators.push(utiliteurNom);
             }
             collaboratorNameInput.value = '';
@@ -130,11 +138,15 @@
          */
         let selectCollaborators = document.getElementById('storyAssignee');
         function updateAssigneeSelect() {
-            let selectCollaborator = document.createElement('option');
-            selectCollaborators.appendChild(selectCollaborator);
-            collaborators.forEach(collaborator =>{
-                selectCollaborator.innerHTML = collaborator;
-            })
+            const select = document.getElementById('storyAssignee');
+            let html = '<option value="">Non assigné</option>';
+            
+            // Ajouter une option pour chaque collaborateur
+            collaborators.forEach(collaborator => {
+                html += `<option value="${collaborator}">${collaborator}</option>`;
+            });
+            
+            select.innerHTML = html;
         }
 
         /**
@@ -186,7 +198,41 @@
          * - Injecter tout le HTML généré dans le conteneur
          */
         function renderSprintBacklog() {
-            // À IMPLÉMENTER
+            const sprintBacklog = document.getElementById('sprintBacklog');
+            let html = '';
+
+            for (let sprintNum = 1; sprintNum <= 3; sprintNum++) {
+                const sprintStories = userStories.filter(story => 
+                    story.sprint === sprintNum && story.status === 'backlog'
+                );
+
+                html += `
+                    <div class="sprint-container">
+                        <div class="sprint-header">
+                            <h3>Sprint ${sprintNum}</h3>
+                            <button class="start-sprint-btn" onclick="startSprint(${sprintNum})">Démarrer Sprint</button>
+                        </div>
+                        <div class="sprint-stories">`;
+
+                if (sprintStories.length === 0) {
+                    html += '<p class="empty-state">Aucune story dans ce sprint</p>';
+                } else {
+                    sprintStories.forEach(story => {
+                        html += `
+                            <div class="story-item">
+                                <strong>${story.title}</strong>
+                                <p>${story.description}</p>
+                                <small class="assignee">${story.assignee || 'Non assigné'}</small>
+                            </div>`;
+                    });
+                }
+
+                html += `
+                        </div>
+                    </div>`;
+            }
+
+            sprintBacklog.innerHTML = html;
         }
 
         /**
@@ -217,6 +263,33 @@
          */
         function renderBoard() {
             // À IMPLÉMENTER
+            const cmls = ['todo', 'in-progress', 'testing', 'done']
+            cmls.forEach(colum => {
+                const container = document.getElementById(colum);
+                const stories = boardStories.filter(arr, arr.status === colum);
+
+                if (stories.length === 0) {
+                    container.innerHTML = "<div class='card'>pas de cart</div>"
+                } else {
+                    let bouton = ""
+
+                    if (colum !== 'done') {
+                        bouton += `<button class="move-btn" onclick="moveCard(${arr.id}, '${getNextStatus(colum)}')">Suivant →</button>`;
+                    }
+
+                    if (colum !== 'todo') {
+                        bouton += `<button class="move-btn" onclick="moveCard(${arr.id}, '${getPrevStatus(colum)}')">Précédent →</button>`;
+                    }
+
+                    container.innerHTML = `<div class="card">
+                <h3>${arr.titre}</h3>
+                <p>${arr.description}</p>
+                <p class="assignee">${arr.assignee}</p>
+                ${bouton}
+            </div>`
+                }
+            });
+
         }
 
         /**
@@ -227,6 +300,8 @@
          */
         function getNextStatus(current) {
             // À IMPLÉMENTER
+            const obj = { 'todo': 'in-progress', 'in-progres': 'testing', 'testing': 'done' }
+            return obj[current]
         }
 
         /**
@@ -237,6 +312,8 @@
          */
         function getPrevStatus(current) {
             // À IMPLÉMENTER
+            const obj = { 'in-progress': 'todo', 'testing': 'in-progres', 'done': 'testing' }
+            return obj[current]
         }
 
         /**
@@ -266,4 +343,5 @@
 
     </script>
 </body>
+
 </html>
