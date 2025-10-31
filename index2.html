@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./assets/css/main.css">
     <title>SCRUM Board</title>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -92,14 +94,14 @@
             utiliteurNom = collaboratorNameInput.value.trim();
             if (utiliteurNom === '' || collaborators.includes(utiliteurNom)) {
                 collaboratorNameInput.style.borderColor = 'red';
-                let message  = document.createElement('span');
+                let message = document.createElement('span');
                 let parent = document.querySelector('.input-group');
                 parent.appendChild(message);
                 message.style.color = 'red';
                 message.style.display = 'flex';
                 message.style.alignItems = 'center';
                 return;
-            }else {
+            } else {
                 collaborators.push(utiliteurNom);
             }
             collaboratorNameInput.value = '';
@@ -202,6 +204,33 @@
          */
         function renderBoard() {
             // À IMPLÉMENTER
+            const cmls = ['todo', 'in-progress', 'testing', 'done']
+            cmls.forEach(colum => {
+                const container = document.getElementById(colum);
+                const stories = boardStories.filter(arr, arr.status === colum);
+
+                if (stories.length === 0) {
+                    container.innerHTML = "<div class='card'>pas de cart</div>"
+                } else {
+                    let bouton = ""
+
+                    if (colum !== 'done') {
+                        bouton += `<button class="move-btn" onclick="moveCard(${arr.id}, '${getNextStatus(colum)}')">Suivant →</button>`;
+                    }
+
+                    if (colum !== 'todo') {
+                        bouton += `<button class="move-btn" onclick="moveCard(${arr.id}, '${getPrevStatus(colum)}')">Précédent →</button>`;
+                    }
+
+                    container.innerHTML = `<div class="card">
+                <h3>${arr.titre}</h3>
+                <p>${arr.description}</p>
+                <p class="assignee">${arr.assignee}</p>
+                ${bouton}
+            </div>`
+                }
+            });
+
         }
 
         /**
@@ -212,6 +241,8 @@
          */
         function getNextStatus(current) {
             // À IMPLÉMENTER
+            const obj = { 'todo': 'in-progress', 'in-progres': 'testing', 'testing': 'done' }
+            return obj[current]
         }
 
         /**
@@ -222,6 +253,8 @@
          */
         function getPrevStatus(current) {
             // À IMPLÉMENTER
+            const obj = { 'in-progress': 'todo', 'testing': 'in-progres', 'done': 'testing' }
+            return obj[current]
         }
 
         /**
@@ -251,4 +284,5 @@
 
     </script>
 </body>
+
 </html>
