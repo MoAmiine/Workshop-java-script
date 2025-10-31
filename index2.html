@@ -197,24 +197,23 @@ function addUserStory() {
          *   - Si aucune story: afficher "Aucune story dans ce sprint"
          * - Injecter tout le HTML généré dans le conteneur
          */
-function renderSprintBacklog() {
-    let container = document.getElementById("sprintBacklog");
-    container.innerHTML = "";
 
-    if(userStories.length === 0) {
-        container.innerHTML = "<p>Aucune story dans le backlog.</p>";
-        return;
-    }
+        function renderSprintBacklog() {
+            let container = document.getElementById("sprintBacklog");
+            container.innerHTML = "";
 
-    userStories.forEach(story => {
-        let div = document.createElement("div");
-        div.style.border = "1px solid #ccc";
-        div.style.padding = "10px";
-        div.style.margin = "5px 0";
-        div.innerHTML = `<strong>${story.title}</strong> (Sprint ${story.sprint})<br>${story.description}<br><em>Assigné à: ${story.assignee}</em>`;
-        container.appendChild(div);
-    });
-}
+            if(userStories.length === 0) {
+                container.innerHTML = "<p>Aucune story dans le backlog.</p>";
+                return;
+            }
+
+            userStories.forEach(story => {
+                let div = document.createElement("div");
+                div.classList.add("sprint-container");
+                div.innerHTML = `<div class="sprint-header"> <h3>Sprint</h3> <button class="start-sprint-btn">Démmarer sprint</button></div><strong>${story.title}</strong> (Sprint ${story.sprint})<br>${story.description}<br><em>Assigné à: ${story.assignee}</em>`;
+                container.appendChild(div);
+            });
+        }
 
         /**
          * Fonction appelée lors du clic sur "Démarrer Sprint"
@@ -227,7 +226,7 @@ function renderSprintBacklog() {
          * - Appeler renderSprintBacklog() et renderBoard() pour mettre à jour l'affichage
          */
         function startSprint(sprintNum) {
-            // À IMPLÉMENTER
+            
         }
 
         /**
@@ -247,7 +246,7 @@ function renderSprintBacklog() {
             const cmls = ['todo', 'in-progress', 'testing', 'done']
             cmls.forEach(colum => {
                 const container = document.getElementById(colum);
-                const stories = boardStories.filter(arr =>arr.status === colum);
+                const stories = boardStories.filter(arr=> arr.status === colum);
 
                 if (stories.length === 0) {
                     container.innerHTML = "<div class='card'>pas de cart</div>"
@@ -274,23 +273,19 @@ function renderSprintBacklog() {
         }
 
         /**
-         * Fonction utilitaire pour obtenir le status suivant dans le workflow
-         * TODO:
-         * - Créer un objet avec les transitions: todo→in-progress, in-progress→testing, testing→done
-         * - Retourner le status suivant selon le status actuel
          */
         function getNextStatus(current) {
             // À IMPLÉMENTER
+            const obj = { 'todo': 'in-progress', 'in-progres': 'testing', 'testing': 'done' }
+            return obj[current]
         }
 
         /**
-         * Fonction utilitaire pour obtenir le status précédent dans le workflow
-         * TODO:
-         * - Créer un objet avec les transitions: in-progress→todo, testing→in-progress, done→testing
-         * - Retourner le status précédent selon le status actuel
          */
         function getPrevStatus(current) {
             // À IMPLÉMENTER
+            const obj = { 'in-progress': 'todo', 'testing': 'in-progres', 'done': 'testing' }
+            return obj[current]
         }
 
         /**
