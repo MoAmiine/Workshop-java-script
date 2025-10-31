@@ -137,12 +137,15 @@
          * - Mettre à jour le select avec innerHTML
          */
         function updateAssigneeSelect() {
-            let selectCollaborators = document.getElementById('storyAssignee');
-            let selectCollaborator = document.createElement('option');
-            selectCollaborators.appendChild(selectCollaborator);
-            collaborators.forEach(collaborator =>{
-                selectCollaborator.innerHTML = collaborator;
-            })
+            const select = document.getElementById('storyAssignee');
+            let html = '<option value="">Non assigné</option>';
+            
+            // Ajouter une option pour chaque collaborateur
+            collaborators.forEach(collaborator => {
+                html += `<option value="${collaborator}">${collaborator}</option>`;
+            });
+            
+            select.innerHTML = html;
         }
 
         /**
@@ -173,7 +176,41 @@
          * - Injecter tout le HTML généré dans le conteneur
          */
         function renderSprintBacklog() {
-            // À IMPLÉMENTER
+            const sprintBacklog = document.getElementById('sprintBacklog');
+            let html = '';
+
+            for (let sprintNum = 1; sprintNum <= 3; sprintNum++) {
+                const sprintStories = userStories.filter(story => 
+                    story.sprint === sprintNum && story.status === 'backlog'
+                );
+
+                html += `
+                    <div class="sprint-container">
+                        <div class="sprint-header">
+                            <h3>Sprint ${sprintNum}</h3>
+                            <button class="start-sprint-btn" onclick="startSprint(${sprintNum})">Démarrer Sprint</button>
+                        </div>
+                        <div class="sprint-stories">`;
+
+                if (sprintStories.length === 0) {
+                    html += '<p class="empty-state">Aucune story dans ce sprint</p>';
+                } else {
+                    sprintStories.forEach(story => {
+                        html += `
+                            <div class="story-item">
+                                <strong>${story.title}</strong>
+                                <p>${story.description}</p>
+                                <small class="assignee">${story.assignee || 'Non assigné'}</small>
+                            </div>`;
+                    });
+                }
+
+                html += `
+                        </div>
+                    </div>`;
+            }
+
+            sprintBacklog.innerHTML = html;
         }
 
         /**
