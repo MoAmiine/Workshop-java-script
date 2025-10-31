@@ -136,6 +136,7 @@
          * - Générer les options: une option "Non assigné" + une option par collaborateur
          * - Mettre à jour le select avec innerHTML
          */
+        let selectCollaborators = document.getElementById('storyAssignee');
         function updateAssigneeSelect() {
             const select = document.getElementById('storyAssignee');
             let html = '<option value="">Non assigné</option>';
@@ -158,10 +159,31 @@
          * - Vider les champs titre et description
          * - Appeler renderSprintBacklog() pour actualiser l'affichage
          */
+
         function addUserStory() {
-            let storyTitle = document.getElementById("storyTitle");
-            let storyDescription = document.getElementById("storyDescription");
-            storyTitle.innerHTML = "hi"
+            let storyTitles = document.getElementById("storyTitle");
+            let storyDescriptions = document.getElementById("storyDescription");
+            let sprints = document.getElementById("storySprint"); 
+            let assignedValue = selectCollaborators.value;
+            let assignedText = selectCollaborators.options[selectCollaborators.selectedIndex].text;
+            let sprintValue = sprints.value;
+            let sprintText = sprints.options[sprints.selectedIndex].text;
+            if (storyTitles.value === '' || storyDescriptions.value === '') {                
+                storyTitles.placeholder = "Please fill the inputs"
+                storyDescriptions.placeholder = "Please fill the inputs"
+                storyDescriptions.classList.add("inputcolor")
+                storyTitles.classList.add("inputcolor")
+            }else{
+                var story = {};
+                story.id = storyIdCounter;
+                story.title = storyTitles.value;
+                story.description = storyDescriptions.value;
+                story.sprint = sprintText;
+                story.assigned = assignedText
+                userStories.push(story);
+            }
+            storyIdCounter++;
+            renderSprintBacklog()
         }
 
         /**
