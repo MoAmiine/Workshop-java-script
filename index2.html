@@ -90,15 +90,11 @@
         var utiliteurNom;
         function addCollaborator() {
             utiliteurNom = collaboratorNameInput.value.trim();
-            if (utiliteurNom === '' || collaborators.includes(utiliteurNom) || message ==="") {
+            if (utiliteurNom === '' || collaborators.includes(utiliteurNom)) {
                 collaboratorNameInput.style.borderColor = 'red';
                 let message  = document.createElement('span');
                 let parent = document.querySelector('.input-group');
                 parent.appendChild(message);
-                if (message === "") {
-                    
-                    message.innerText = 'Nom invalide ou déjà existant';
-                }
                 message.style.color = 'red';
                 message.style.display = 'flex';
                 message.style.alignItems = 'center';
@@ -123,7 +119,7 @@
         function updateCollaboratorsList() {
             let collaborateurList = document.getElementById('collaboratorsList');
             let badge = document.createElement('span');
-            badge.innerText = utiliteurNom;
+            badge.innerHTML = utiliteurNom;
             badge.style.background = '#667eea';
             badge.style.color = 'white';
             badge.style.padding = '8px 15px';
@@ -139,7 +135,12 @@
          * - Mettre à jour le select avec innerHTML
          */
         function updateAssigneeSelect() {
-            // À IMPLÉMENTER
+            let selectCollaborators = document.getElementById('storyAssignee');
+            let selectCollaborator = document.createElement('option');
+            selectCollaborators.appendChild(selectCollaborator);
+            collaborators.forEach(collaborator =>{
+                selectCollaborator.innerHTML = collaborator;
+            })
         }
 
         /**
@@ -153,7 +154,9 @@
          * - Appeler renderSprintBacklog() pour actualiser l'affichage
          */
         function addUserStory() {
-            // À IMPLÉMENTER
+            let storyTitle = document.getElementById("storyTitle");
+            let storyDescription = document.getElementById("storyDescription");
+            storyTitle.innerHTML = "hi"
         }
 
         /**
